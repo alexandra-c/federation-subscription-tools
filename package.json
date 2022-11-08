@@ -13,18 +13,20 @@
     "watch": "tsc --build tsconfig.json --watch"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.7.1",
     "apollo-datasource": "^0.7.3",
-    "apollo-server": "^3.6.2",
-    "graphql": "^15.5.0",
+    "apollo-server": "^3.11.1",
     "graphql-parse-resolve-info": "4.12.0",
-    "graphql-tools": "^8.2.0",
+    "graphql-tools": "^8.3.11",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.178",
-    "@types/node-fetch": "^2.6.1",
-    "typescript": "^4.5.5"
+    "@types/lodash": "^4.14.188",
+    "@types/node-fetch": "^2.6.2",
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "graphql": "^16.6.0"
   }
 }
