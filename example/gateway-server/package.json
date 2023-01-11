@@ -7,7 +7,9 @@
     "server": "concurrently -k npm:server:*",
     "server:authors": "nodemon -r esm -r dotenv/config ./src/services/authors/index.js",
     "server:posts": "nodemon -r esm -r dotenv/config ./src/services/posts/index.js",
-    "server:gateway": "wait-on tcp:4001 tcp:4002 && nodemon -r esm -r dotenv/config ./src/index.js"
+    "gateway": "wait-on tcp:4001 tcp:4002 && nodemon -r esm -r dotenv/config ./src/index.js",
+    "check:authors": "rover subgraph introspect http://localhost:4001 | rover subgraph check blog-ts@current --schema - --name authors",
+    "check:posts": "rover subgraph introspect http://localhost:4002 | rover subgraph check blog-ts@current --schema - --name posts"
   },
   "keywords": [],
   "author": "",
