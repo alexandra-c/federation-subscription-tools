@@ -1,28 +1,36 @@
 import {
   ApolloError,
   AuthenticationError,
-  ForbiddenError
+  ForbiddenError,
 } from "apollo-server";
 import { createHttpLink, execute, from, toPromise } from "@apollo/client/core";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
 import { DocumentNode } from "graphql";
 import { GraphQLOptions } from "apollo-server";
 import { onError } from "@apollo/client/link/error";
-import {
-  FieldsByTypeName,
-  parseResolveInfo,
-  ResolveTree
-} from "graphql-parse-resolve-info";
 import { setContext } from "@apollo/client/link/context";
 import fetch from "node-fetch";
 import merge from "lodash/merge";
+import {
+  FieldsByTypeName,
+  parseResolveInfo,
+  ResolveTree,
+} from "../../utils/parsing";
+
 export class GatewayDataSource<TContext = any> extends DataSource {
   private gatewayURL;
+  private propertyName;
   context!: TContext;
 
-  constructor(gatewayURL: string) {
+  constructor(gatewayURL: string, propertyName: string) {
     super();
+    if (!propertyName)
+      console.error(
+        `If you wish to merge an array of gateway data sources to your subscription context using "mergeGatewayDataSources" function, 
+          it's mandatory to pass a "propertyName" value when instantiating a dataSource!`
+      );
     this.gatewayURL = gatewayURL;
+    this.propertyName = propertyName;
   }
 
   override initialize(config: DataSourceConfig<TContext>): void {
@@ -36,7 +44,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
       this.onErrorLink(),
       this.onRequestLink(),
       /* @ts-ignore-next-line */
-      createHttpLink({ fetch, uri })
+      createHttpLink({ fetch, uri }),
     ]);
   }
   didEncounterError(error: any) {
@@ -77,7 +85,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
     return gatewayURL;
   }
   onRequestLink() {
-    return setContext(request => {
+    return setContext((request) => {
       if (typeof (this as any).willSendRequest === "function") {
         (this as any).willSendRequest(request);
       }
@@ -87,7 +95,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
   onErrorLink() {
     return onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors) {
-        graphQLErrors.map(graphqlError =>
+        graphQLErrors.map((graphqlError) =>
           console.error(`[GraphQL error]: ${graphqlError.message}`)
         );
       }
@@ -165,11 +173,11 @@ export class GatewayDataSource<TContext = any> extends DataSource {
           });
           let keptOptions = {
             ...(name !== alias && { alias }),
-            ...(Object.keys(args).length && { args })
+            ...(Object.keys(args).length && { args }),
           };
           return [
             pathParts.join("."),
-            Object.keys(keptOptions).length ? keptOptions : null
+            Object.keys(keptOptions).length ? keptOptions : null,
           ];
         })
     );
@@ -223,14 +231,14 @@ export class GatewayDataSource<TContext = any> extends DataSource {
       : {};
     const operationFieldPaths = Object.keys(operationFields);
     return operationFieldPaths
-      .filter(path => !payloadFieldPaths.includes(path))
+      .filter((path) => !payloadFieldPaths.includes(path))
       .reduce((acc, curr, i, arr) => {
         const pathParts = curr.split(".");
         let selections = "";
         pathParts.forEach((part, j) => {
           // Is this a top-level field that will be accounted for when nested
           // children are added to the selection?
-          const hasSubFields = !!arr.slice(i + 1).find(item => {
+          const hasSubFields = !!arr.slice(i + 1).find((item) => {
             const itemParts = item.split(".");
             itemParts.pop();
             const rejoinedItem = itemParts.join(".");

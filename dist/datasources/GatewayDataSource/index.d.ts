@@ -1,11 +1,12 @@
 import { DataSource, DataSourceConfig } from "apollo-datasource";
 import { DocumentNode } from "graphql";
 import { GraphQLOptions } from "apollo-server";
-import { FieldsByTypeName, ResolveTree } from "graphql-parse-resolve-info";
+import { FieldsByTypeName, ResolveTree } from "../../utils/parsing";
 export declare class GatewayDataSource<TContext = any> extends DataSource {
     private gatewayURL;
+    private propertyName;
     context: TContext;
-    constructor(gatewayURL: string);
+    constructor(gatewayURL: string, propertyName: string);
     initialize(config: DataSourceConfig<TContext>): void;
     composeLinks(): import("@apollo/client/core").ApolloLink;
     didEncounterError(error: any): void;

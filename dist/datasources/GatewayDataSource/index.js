@@ -8,16 +8,21 @@ const apollo_server_1 = require("apollo-server");
 const core_1 = require("@apollo/client/core");
 const apollo_datasource_1 = require("apollo-datasource");
 const error_1 = require("@apollo/client/link/error");
-const graphql_parse_resolve_info_1 = require("graphql-parse-resolve-info");
 const context_1 = require("@apollo/client/link/context");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const merge_1 = __importDefault(require("lodash/merge"));
+const parsing_1 = require("../../utils/parsing");
 class GatewayDataSource extends apollo_datasource_1.DataSource {
     gatewayURL;
+    propertyName;
     context;
-    constructor(gatewayURL) {
+    constructor(gatewayURL, propertyName) {
         super();
+        if (!propertyName)
+            console.error(`If you wish to merge an array of gateway data sources to your subscription context using "mergeGatewayDataSources" function, 
+          it's mandatory to pass a "propertyName" value when instantiating a dataSource!`);
         this.gatewayURL = gatewayURL;
+        this.propertyName = propertyName;
     }
     initialize(config) {
         this.context = config.context;
@@ -27,7 +32,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
         return (0, core_1.from)([
             this.onErrorLink(),
             this.onRequestLink(),
-            (0, core_1.createHttpLink)({ fetch: node_fetch_1.default, uri })
+            (0, core_1.createHttpLink)({ fetch: node_fetch_1.default, uri }),
         ]);
     }
     didEncounterError(error) {
@@ -67,7 +72,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
         return gatewayURL;
     }
     onRequestLink() {
-        return (0, context_1.setContext)(request => {
+        return (0, context_1.setContext)((request) => {
             if (typeof this.willSendRequest === "function") {
                 this.willSendRequest(request);
             }
@@ -77,7 +82,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
     onErrorLink() {
         return (0, error_1.onError)(({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                graphQLErrors.map(graphqlError => console.error(`[GraphQL error]: ${graphqlError.message}`));
+                graphQLErrors.map((graphqlError) => console.error(`[GraphQL error]: ${graphqlError.message}`));
             }
             if (networkError) {
                 console.log(`[Network Error]: ${networkError}`);
@@ -138,11 +143,11 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
             });
             let keptOptions = {
                 ...(name !== alias && { alias }),
-                ...(Object.keys(args).length && { args })
+                ...(Object.keys(args).length && { args }),
             };
             return [
                 pathParts.join("."),
-                Object.keys(keptOptions).length ? keptOptions : null
+                Object.keys(keptOptions).length ? keptOptions : null,
             ];
         }));
     }
@@ -182,19 +187,19 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
         return formattedSelection;
     }
     buildNonPayloadSelections(payload, info) {
-        const resolveInfo = (0, graphql_parse_resolve_info_1.parseResolveInfo)(info);
+        const resolveInfo = (0, parsing_1.parseResolveInfo)(info);
         const payloadFieldPaths = this.fieldPathsAsStrings(payload[resolveInfo?.name]);
         const operationFields = resolveInfo
             ? this.fieldPathsAsMapFromResolveInfo(resolveInfo)
             : {};
         const operationFieldPaths = Object.keys(operationFields);
         return operationFieldPaths
-            .filter(path => !payloadFieldPaths.includes(path))
+            .filter((path) => !payloadFieldPaths.includes(path))
             .reduce((acc, curr, i, arr) => {
             const pathParts = curr.split(".");
             let selections = "";
             pathParts.forEach((part, j) => {
-                const hasSubFields = !!arr.slice(i + 1).find(item => {
+                const hasSubFields = !!arr.slice(i + 1).find((item) => {
                     const itemParts = item.split(".");
                     itemParts.pop();
                     const rejoinedItem = itemParts.join(".");

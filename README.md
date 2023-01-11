@@ -85,8 +85,10 @@ import { GatewayDataSource } from "federation-subscription-tools";
 import gql from "graphql-tag";
 
 export class LiveBlogDataSource extends GatewayDataSource {
-  constructor(gatewayUrl) {
-    super(gatewayUrl);
+  # `propertyName` represents the name of the property on the dataSources.gatewayApi object for LiveBlogDataSource instance.
+  # It can either be given here or when instantiating the LiveBlogDataSource class
+  constructor(gatewayUrl, propertyName) {
+    super(gatewayUrl, propertyName || "liveBlog");
   }
 
   willSendRequest(request) {
@@ -156,7 +158,7 @@ const resolvers = {
 
 In effect, this means that as long the resource that is used as the output type for any subscriptions field may be queried from the federated data graph, then this node may be used as an entry point to that data graph to resolve non-payload fields.
 
-For the gateway data source to be accessible in `Subscription` field resolvers, we must manually add it to the request context using the `addGatewayDataSourceToSubscriptionContext` function. Note that this example uses [graphql-ws](https://github.com/enisdenjo/graphql-ws) to serve the WebSocket-enabled endpoint for subscription operations. A sample implementation may be structured as follows:
+For the gateway data source to be accessible in `Subscription` field resolvers, we must manually add it to the request context using the `mergeGatewayDataSources` function. Note that this example uses [graphql-ws](https://github.com/enisdenjo/graphql-ws) to serve the WebSocket-enabled endpoint for subscription operations. A sample implementation may be structured as follows:
 
 ```js
 // index.js (subscriptions service)
@@ -179,12 +181,19 @@ useServer(
       // If a token was sent for auth purposes, retrieve it here
       const { token } = ctx.connectionParams;
 
-      // Instantiate and initialize the GatewayDataSource subclass
-      // (data source methods will be accessible on the `gatewayApi` key)
-      const liveBlogDataSource = new LiveBlogDataSource(gatewayEndpoint);
-      const dataSourceContext = addGatewayDataSourceToSubscriptionContext(
+      /* Instantiate and initialize all your GatewayDataSource subclasses
+        Data source methods will be accessible on the `gatewayApi` as follows:
+        dataSources: {
+          gatewayApi: {
+            liveBlog: any
+          }
+        }
+      })
+      */
+      const liveBlogDataSource = new LiveBlogDataSource(gatewayEndpoint, "liveBlog");
+      const dataSourceContext = mergeGatewayDataSources(
         ctx,
-        liveBlogDataSource
+        [liveBlogDataSource]
       );
 
       // Return the complete context for the request
