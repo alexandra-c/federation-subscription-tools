@@ -9,7 +9,7 @@ export const resolvers = {
       // payload data that was included in `pubsub.publish()`, so we must
       // provide some mechanism to fetch those additional fields when requested
       resolve(payload, args, { dataSources: { gatewayApi } }, info) {
-        return gatewayApi.fetchAndMergeNonPayloadPostData(
+        return gatewayApi.liveBlog.fetchAndMergeNonPayloadPostData(
           payload.postAdded.id,
           payload,
           info
@@ -18,7 +18,7 @@ export const resolvers = {
       subscribe(_, args) {
         // Subscribe to `POST_ADDED` in the shared Redis instance
         return pubsub.asyncIterator([POST_ADDED]);
-      }
-    }
-  }
+      },
+    },
+  },
 };

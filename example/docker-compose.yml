@@ -29,11 +29,11 @@ services:
     restart: always
     build:
       context: ../
-      dockerfile: subscriptions-server/Dockerfile
+      dockerfile: example/subscriptions-server/Dockerfile
     ports:
       - 5000:5000
     volumes:
-      - ./subscriptions-server:/home/node/app
+      - ../example/subscriptions-server:/home/node/app
       - ../:/home/node/federation-subscription-tools
       - /home/node/app/node_modules
       - /home/node/federation-subscription-tools/dist

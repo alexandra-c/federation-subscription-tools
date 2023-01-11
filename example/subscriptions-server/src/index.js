@@ -1,10 +1,10 @@
 import http from "http";
 
 import {
-  addGatewayDataSourceToSubscriptionContext,
+  mergeGatewayDataSources,
   getGatewayApolloConfig,
-  makeSubscriptionSchema
-} from "federation-subscription-tools";
+  makeSubscriptionSchema,
+} from "@totalsoft/federation-subscription-tools";
 import { ApolloGateway } from "@apollo/gateway";
 import {
   execute,
@@ -12,7 +12,7 @@ import {
   GraphQLError,
   parse,
   subscribe,
-  validate
+  validate,
 } from "graphql";
 import { useServer } from "graphql-ws/lib/use/ws";
 import ws from "ws";
@@ -35,23 +35,23 @@ import { typeDefs } from "./typeDefs";
    * Instantiate an instance of the Gateway
    */
   let gatewayOptions = {
-    debug: isProd ? false : true
+    debug: isProd ? false : true,
   };
 
   if (!apolloKey) {
     gatewayOptions.serviceList = [
       { name: "authors", url: process.env.AUTHORS_SERVICE_URL },
-      { name: "posts", url: process.env.POSTS_SERVICE_URL }
+      { name: "posts", url: process.env.POSTS_SERVICE_URL },
     ];
   }
 
   const gateway = new ApolloGateway(gatewayOptions);
 
-  gateway.onSchemaLoadOrUpdate(schemaContext => {
+  gateway.onSchemaLoadOrUpdate((schemaContext) => {
     schema = makeSubscriptionSchema({
       gatewaySchema: schemaContext.apiSchema,
       typeDefs,
-      resolvers
+      resolvers,
     });
   });
 
@@ -78,24 +78,23 @@ import { typeDefs } from "./typeDefs";
 
   const wsServer = new ws.Server({
     server: httpServer,
-    path: "/graphql"
+    path: "/graphql",
   });
 
   useServer(
     {
       execute,
       subscribe,
-      context: ctx => {
+      context: (ctx) => {
         // If a token was sent for auth purposes, retrieve it here
         const { token } = ctx.connectionParams;
 
         // Instantiate and initialize the GatewayDataSource subclass
         // (data source methods will be accessible on the `gatewayApi` key)
         const liveBlogDataSource = new LiveBlogDataSource(gatewayEndpoint);
-        const dataSourceContext = addGatewayDataSourceToSubscriptionContext(
-          ctx,
-          liveBlogDataSource
-        );
+        const dataSourceContext = mergeGatewayDataSources(ctx, [
+          liveBlogDataSource,
+        ]);
 
         // Return the complete context for the request
         return { token: token || null, ...dataSourceContext };
@@ -106,7 +105,7 @@ import { typeDefs } from "./typeDefs";
           schema,
           operationName: msg.payload.operationName,
           document: parse(msg.payload.query),
-          variableValues: msg.payload.variables
+          variableValues: msg.payload.variables,
         };
 
         const operationAST = getOperationAST(args.document, args.operationName);
@@ -119,7 +118,7 @@ import { typeDefs } from "./typeDefs";
         // Handle mutation and query requests
         if (operationAST.operation !== "subscription") {
           return [
-            new GraphQLError("Only subscription operations are supported")
+            new GraphQLError("Only subscription operations are supported"),
           ];
         }
 
@@ -132,7 +131,7 @@ import { typeDefs } from "./typeDefs";
 
         // Ready execution arguments
         return args;
-      }
+      },
     },
     wsServer
   );

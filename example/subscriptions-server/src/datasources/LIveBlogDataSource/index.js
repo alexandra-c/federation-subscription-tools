@@ -1,9 +1,9 @@
-import { GatewayDataSource } from "federation-subscription-tools";
+import { GatewayDataSource } from "@totalsoft/federation-subscription-tools";
 import gql from "graphql-tag";
 
 export class LiveBlogDataSource extends GatewayDataSource {
   constructor(gatewayUrl) {
-    super(gatewayUrl);
+    super(gatewayUrl, 'liveBlog');
   }
 
   willSendRequest(request) {

@@ -7,7 +7,7 @@
     "server": "concurrently -k npm:server:*",
     "server:authors": "nodemon -r esm -r dotenv/config ./src/services/authors/index.js",
     "server:posts": "nodemon -r esm -r dotenv/config ./src/services/posts/index.js",
-    "gateway": "wait-on tcp:4001 tcp:4002 && nodemon -r esm -r dotenv/config ./src/index.js",
+    "server:gateway": "wait-on tcp:4001 tcp:4002 && nodemon -r esm -r dotenv/config ./src/index.js",
     "check:authors": "rover subgraph introspect http://localhost:4001 | rover subgraph check blog-ts@current --schema - --name authors",
     "check:posts": "rover subgraph introspect http://localhost:4002 | rover subgraph check blog-ts@current --schema - --name posts"
   },
@@ -15,16 +15,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/gateway": "^0.46.0",
-    "@apollo/subgraph": "^0.3.1",
+    "@apollo/gateway": "^2.2.3",
+    "@apollo/subgraph": "^2.2.3",
     "apollo-server": "^3.6.3",
-    "concurrently": "^5.3.0",
-    "dotenv": "^8.2.0",
+    "concurrently": "^7.6.0",
+    "dotenv": "^16.0.3",
     "esm": "^3.2.25",
-    "graphql": "^15.5.0",
-    "graphql-redis-subscriptions": "^2.3.1",
-    "ioredis": "^4.19.4",
-    "nodemon": "^2.0.7",
-    "wait-on": "^5.2.1"
+    "graphql": "^16.6.0",
+    "graphql-redis-subscriptions": "^2.6.0",
+    "ioredis": "^5.2.4",
+    "nodemon": "^2.0.20",
+    "wait-on": "^7.0.1"
   }
 }
