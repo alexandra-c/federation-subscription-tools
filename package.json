@@ -1,6 +1,6 @@
 {
   "name": "@totalsoft/federation-subscription-tools",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A set of demonstration utilities to facilitate GraphQL subscription usage alongside a federated data graph. Compatible with Apollo Federation 2",
   "main": "dist/index.js",
   "types": "dist/types.d.ts",

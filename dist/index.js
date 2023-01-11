@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeSubscriptionSchema = exports.getGatewayApolloConfig = exports.GatewayDataSource = exports.addGatewayDataSourceToSubscriptionContext = void 0;
+exports.makeSubscriptionSchema = exports.getGatewayApolloConfig = exports.GatewayDataSource = exports.mergeGatewayDataSources = void 0;
 var subscriptions_1 = require("./utils/subscriptions");
-Object.defineProperty(exports, "addGatewayDataSourceToSubscriptionContext", { enumerable: true, get: function () { return subscriptions_1.addGatewayDataSourceToSubscriptionContext; } });
+Object.defineProperty(exports, "mergeGatewayDataSources", { enumerable: true, get: function () { return subscriptions_1.mergeGatewayDataSources; } });
 var GatewayDataSource_1 = require("./datasources/GatewayDataSource");
 Object.defineProperty(exports, "GatewayDataSource", { enumerable: true, get: function () { return GatewayDataSource_1.GatewayDataSource; } });
 var schema_1 = require("./utils/schema");
