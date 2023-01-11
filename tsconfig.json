@@ -19,6 +19,5 @@
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "**/example/*"]
 }
