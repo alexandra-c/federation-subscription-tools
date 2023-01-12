@@ -85,8 +85,8 @@ import { GatewayDataSource } from "federation-subscription-tools";
 import gql from "graphql-tag";
 
 export class LiveBlogDataSource extends GatewayDataSource {
-  # `propertyName` represents the name of the property on the dataSources.gatewayApi object for LiveBlogDataSource instance.
-  # It can either be given here or when instantiating the LiveBlogDataSource class
+  // `propertyName` represents the name of the property on the dataSources.gatewayApi object for LiveBlogDataSource instance.
+  // It can either be given here or when instantiating the LiveBlogDataSource class
   constructor(gatewayUrl, propertyName) {
     super(gatewayUrl, propertyName || "liveBlog");
   }
