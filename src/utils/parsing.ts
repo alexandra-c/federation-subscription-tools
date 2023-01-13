@@ -15,7 +15,7 @@ import {
   SelectionNode,
   FragmentSpreadNode,
   InlineFragmentNode,
-  NamedTypeNode,
+  NamedTypeNode
 } from "graphql";
 import { getArgumentValues } from "graphql/execution/values";
 
@@ -53,7 +53,7 @@ function skipField(
   { directives = [] }: SelectionNode
 ) {
   let skip = false;
-  directives.forEach((directive) => {
+  directives.forEach(directive => {
     const directiveName = directive.name.value;
     if (Array.isArray(directive.arguments)) {
       const ifArgumentAst = directive.arguments.find(argNameIsIf);
@@ -197,9 +197,9 @@ function fieldTreeFromAST<T extends SelectionNode>(
             args,
             fieldsByTypeName: isCompositeType(fieldGqlType)
               ? {
-                  [fieldGqlType.name]: {},
+                  [fieldGqlType.name]: {}
                 }
-              : {},
+              : {}
           };
           tree[parentType.name][alias] = newTreeRoot;
         }
@@ -304,7 +304,7 @@ export function simplifyParsedResolveInfoFragmentWithType(
   }
   return {
     ...parsedResolveInfoFragment,
-    fields,
+    fields
   };
 }
 

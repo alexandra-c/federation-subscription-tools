@@ -18,7 +18,7 @@ export const resolvers = {
       subscribe(_, args) {
         // Subscribe to `POST_ADDED` in the shared Redis instance
         return pubsub.asyncIterator([POST_ADDED]);
-      },
-    },
-  },
+      }
+    }
+  }
 };

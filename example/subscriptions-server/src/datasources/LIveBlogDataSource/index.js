@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 
 export class LiveBlogDataSource extends GatewayDataSource {
   constructor(gatewayUrl) {
-    super(gatewayUrl, 'liveBlog');
+    super(gatewayUrl, "liveBlog");
   }
 
   willSendRequest(request) {

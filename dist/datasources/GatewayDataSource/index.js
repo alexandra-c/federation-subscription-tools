@@ -32,7 +32,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
         return (0, core_1.from)([
             this.onErrorLink(),
             this.onRequestLink(),
-            (0, core_1.createHttpLink)({ fetch: node_fetch_1.default, uri }),
+            (0, core_1.createHttpLink)({ fetch: node_fetch_1.default, uri })
         ]);
     }
     didEncounterError(error) {
@@ -72,7 +72,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
         return gatewayURL;
     }
     onRequestLink() {
-        return (0, context_1.setContext)((request) => {
+        return (0, context_1.setContext)(request => {
             if (typeof this.willSendRequest === "function") {
                 this.willSendRequest(request);
             }
@@ -82,7 +82,7 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
     onErrorLink() {
         return (0, error_1.onError)(({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                graphQLErrors.map((graphqlError) => console.error(`[GraphQL error]: ${graphqlError.message}`));
+                graphQLErrors.map(graphqlError => console.error(`[GraphQL error]: ${graphqlError.message}`));
             }
             if (networkError) {
                 console.log(`[Network Error]: ${networkError}`);
@@ -143,11 +143,11 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
             });
             let keptOptions = {
                 ...(name !== alias && { alias }),
-                ...(Object.keys(args).length && { args }),
+                ...(Object.keys(args).length && { args })
             };
             return [
                 pathParts.join("."),
-                Object.keys(keptOptions).length ? keptOptions : null,
+                Object.keys(keptOptions).length ? keptOptions : null
             ];
         }));
     }
@@ -194,12 +194,12 @@ class GatewayDataSource extends apollo_datasource_1.DataSource {
             : {};
         const operationFieldPaths = Object.keys(operationFields);
         return operationFieldPaths
-            .filter((path) => !payloadFieldPaths.includes(path))
+            .filter(path => !payloadFieldPaths.includes(path))
             .reduce((acc, curr, i, arr) => {
             const pathParts = curr.split(".");
             let selections = "";
             pathParts.forEach((part, j) => {
-                const hasSubFields = !!arr.slice(i + 1).find((item) => {
+                const hasSubFields = !!arr.slice(i + 1).find(item => {
                     const itemParts = item.split(".");
                     itemParts.pop();
                     const rejoinedItem = itemParts.join(".");

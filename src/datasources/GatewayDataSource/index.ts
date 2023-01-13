@@ -1,7 +1,7 @@
 import {
   ApolloError,
   AuthenticationError,
-  ForbiddenError,
+  ForbiddenError
 } from "apollo-server";
 import { createHttpLink, execute, from, toPromise } from "@apollo/client/core";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
@@ -14,7 +14,7 @@ import merge from "lodash/merge";
 import {
   FieldsByTypeName,
   parseResolveInfo,
-  ResolveTree,
+  ResolveTree
 } from "../../utils/parsing";
 
 export class GatewayDataSource<TContext = any> extends DataSource {
@@ -44,7 +44,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
       this.onErrorLink(),
       this.onRequestLink(),
       /* @ts-ignore-next-line */
-      createHttpLink({ fetch, uri }),
+      createHttpLink({ fetch, uri })
     ]);
   }
   didEncounterError(error: any) {
@@ -85,7 +85,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
     return gatewayURL;
   }
   onRequestLink() {
-    return setContext((request) => {
+    return setContext(request => {
       if (typeof (this as any).willSendRequest === "function") {
         (this as any).willSendRequest(request);
       }
@@ -95,7 +95,7 @@ export class GatewayDataSource<TContext = any> extends DataSource {
   onErrorLink() {
     return onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors) {
-        graphQLErrors.map((graphqlError) =>
+        graphQLErrors.map(graphqlError =>
           console.error(`[GraphQL error]: ${graphqlError.message}`)
         );
       }
@@ -173,11 +173,11 @@ export class GatewayDataSource<TContext = any> extends DataSource {
           });
           let keptOptions = {
             ...(name !== alias && { alias }),
-            ...(Object.keys(args).length && { args }),
+            ...(Object.keys(args).length && { args })
           };
           return [
             pathParts.join("."),
-            Object.keys(keptOptions).length ? keptOptions : null,
+            Object.keys(keptOptions).length ? keptOptions : null
           ];
         })
     );
@@ -231,14 +231,14 @@ export class GatewayDataSource<TContext = any> extends DataSource {
       : {};
     const operationFieldPaths = Object.keys(operationFields);
     return operationFieldPaths
-      .filter((path) => !payloadFieldPaths.includes(path))
+      .filter(path => !payloadFieldPaths.includes(path))
       .reduce((acc, curr, i, arr) => {
         const pathParts = curr.split(".");
         let selections = "";
         pathParts.forEach((part, j) => {
           // Is this a top-level field that will be accounted for when nested
           // children are added to the selection?
-          const hasSubFields = !!arr.slice(i + 1).find((item) => {
+          const hasSubFields = !!arr.slice(i + 1).find(item => {
             const itemParts = item.split(".");
             itemParts.pop();
             const rejoinedItem = itemParts.join(".");

@@ -9,11 +9,11 @@ function getGatewayApolloConfig(key, graphRef) {
     return {
         key,
         graphRef,
-        keyHash: (0, crypto_1.createHash)("sha512").update(key).digest("hex"),
+        keyHash: (0, crypto_1.createHash)("sha512").update(key).digest("hex")
     };
 }
 exports.getGatewayApolloConfig = getGatewayApolloConfig;
-function makeSubscriptionSchema({ gatewaySchema, typeDefs, resolvers, }) {
+function makeSubscriptionSchema({ gatewaySchema, typeDefs, resolvers }) {
     if (!typeDefs || !resolvers) {
         throw new Error("Both `typeDefs` and `resolvers` are required to make the executable subscriptions schema.");
     }
@@ -23,9 +23,9 @@ function makeSubscriptionSchema({ gatewaySchema, typeDefs, resolvers, }) {
     return (0, schema_1.makeExecutableSchema)({
         typeDefs: [
             ...(gatewayTypeDefs && [gatewayTypeDefs]),
-            typeDefs,
+            typeDefs
         ],
-        resolvers,
+        resolvers
     });
 }
 exports.makeSubscriptionSchema = makeSubscriptionSchema;

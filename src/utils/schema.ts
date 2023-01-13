@@ -8,14 +8,14 @@ export function getGatewayApolloConfig(key: string, graphRef: string) {
   return {
     key,
     graphRef,
-    keyHash: createHash("sha512").update(key).digest("hex"),
+    keyHash: createHash("sha512").update(key).digest("hex")
   };
 }
 
 export function makeSubscriptionSchema({
   gatewaySchema,
   typeDefs,
-  resolvers,
+  resolvers
 }: any) {
   if (!typeDefs || !resolvers) {
     throw new Error(
@@ -30,8 +30,8 @@ export function makeSubscriptionSchema({
   return makeExecutableSchema({
     typeDefs: [
       ...((gatewayTypeDefs && [gatewayTypeDefs]) as DocumentNode[]),
-      typeDefs,
+      typeDefs
     ],
-    resolvers,
+    resolvers
   });
 }

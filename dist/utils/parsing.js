@@ -20,7 +20,7 @@ function argNameIsIf(arg) {
 }
 function skipField(resolveInfo, { directives = [] }) {
     let skip = false;
-    directives.forEach((directive) => {
+    directives.forEach(directive => {
         const directiveName = directive.name.value;
         if (Array.isArray(directive.arguments)) {
             const ifArgumentAst = directive.arguments.find(argNameIsIf);
@@ -127,9 +127,9 @@ function fieldTreeFromAST(inASTs, resolveInfo, initTree = {}, options = {}, pare
                         args,
                         fieldsByTypeName: (0, graphql_1.isCompositeType)(fieldGqlType)
                             ? {
-                                [fieldGqlType.name]: {},
+                                [fieldGqlType.name]: {}
                             }
-                            : {},
+                            : {}
                     };
                     tree[parentType.name][alias] = newTreeRoot;
                 }
@@ -202,7 +202,7 @@ function simplifyParsedResolveInfoFragmentWithType(parsedResolveInfoFragment, ty
     }
     return {
         ...parsedResolveInfoFragment,
-        fields,
+        fields
     };
 }
 exports.simplifyParsedResolveInfoFragmentWithType = simplifyParsedResolveInfoFragmentWithType;
